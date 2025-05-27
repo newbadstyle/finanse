@@ -32,26 +32,70 @@ class WelcomePage extends StatelessWidget {
               ),
               Text('Twój osobisty przewodnik po finansach'),
               SizedBox(height: 15),
-              FilledButton(
-                style: FilledButton.styleFrom(minimumSize: Size(300, 40)),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                },
-                child: Text('Logowanie'),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size(300, 40),
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: Text('Logowanie'),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 5),
-              FilledButton(
-                style: FilledButton.styleFrom(minimumSize: Size(300, 40)),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                  );
-                },
-                child: Text('Rejestracja'),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size(300, 40),
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterPage(),
+                          ),
+                        );
+                      },
+                      child: Text('Rejestracja'),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 50),
             ],
