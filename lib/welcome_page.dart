@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'login_page.dart';
 import 'register_page.dart';
 
@@ -6,17 +7,26 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Witaj')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Kontroluj swoje finanse już dziś',
+              'NINJA',
+              style: TextStyle(
+                fontFamily: 'JosefinSans',
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Lottie.asset('assets/lotties/hello.json'),
+            Text(
+              'Witaj!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
+            Text('Twój osobisty przewodnik po finansach Ninja'),
             SizedBox(height: 20),
-            ElevatedButton(
+            FilledButton(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -26,7 +36,7 @@ class WelcomePage extends StatelessWidget {
               child: Text('Logowanie'),
             ),
             SizedBox(height: 10),
-            ElevatedButton(
+            FilledButton(
               onPressed: () {
                 Navigator.push(
                   context,
