@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 250),
+                SizedBox(height: 200),
                 Text(
                   'Logowanie',
                   style: TextStyle(
