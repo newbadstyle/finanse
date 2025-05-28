@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "499364003042",
+    "project_id": "ninja-b3ffb",
+    "storage_bucket": "ninja-b3ffb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499364003042:android:e849e04dc4b27c7c0072bb",
+        "android_client_info": {
+          "package_name": "com.example.finanse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAntGd2C8wMO6u1Tg-Szoz8nzjy9RO-0oc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
