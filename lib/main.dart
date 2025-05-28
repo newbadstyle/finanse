@@ -8,8 +8,20 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase initialized successfully');
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+    return;
+  }
+
   authService.value = AuthService();
+  print('authService initialized');
+
   runApp(const MyApp());
 }
 
@@ -25,12 +37,21 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder<User?>(
         stream: authService.value.authStateChanges,
         builder: (context, snapshot) {
+          print(
+            'StreamBuilder snapshot: connectionState=${snapshot.connectionState}, hasData=${snapshot.hasData}, data=${snapshot.data}',
+          );
+
           if (snapshot.connectionState == ConnectionState.waiting) {
+            print('Waiting for auth state...');
             return const Center(child: CircularProgressIndicator());
           }
+
           if (snapshot.hasData) {
+            print('User is logged in: ${snapshot.data?.uid}');
             return StartPage();
           }
+
+          print('User is not logged in, showing WelcomePage');
           return WelcomePage();
         },
       ),

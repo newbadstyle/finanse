@@ -1,3 +1,4 @@
+import 'package:finanse/app/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class StartPage extends StatelessWidget {
@@ -25,6 +26,17 @@ class StartPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await authService.value.signOut();
+                    print('User signed out from StartPage');
+                  } catch (e) {
+                    print('Error signing out: $e');
+                  }
+                },
+                child: const Text('Wyloguj się'),
+              ),
             ],
           ),
         ),
