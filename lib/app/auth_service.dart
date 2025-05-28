@@ -10,8 +10,6 @@ class AuthService {
 
   Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
 
-  AuthService? get value => null;
-
   Future<UserCredential> signIn({
     required String email,
     required String password,
@@ -22,10 +20,18 @@ class AuthService {
         message: 'Email i hasło nie mogą być puste.',
       );
     }
-    return await firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      return await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      print('Sign in error: $e');
+      throw FirebaseAuthException(
+        code: 'sign-in-failed',
+        message: 'Błąd logowania: ${e.toString()}',
+      );
+    }
   }
 
   Future<UserCredential> createAccount({
@@ -44,14 +50,31 @@ class AuthService {
         message: 'Hasło musi mieć co najmniej 6 znaków.',
       );
     }
-    return await firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      return await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      print('Create account error: $e');
+      throw FirebaseAuthException(
+        code: 'create-account-failed',
+        message: 'Błąd rejestracji: ${e.toString()}',
+      );
+    }
   }
 
   Future<void> signOut() async {
-    await firebaseAuth.signOut();
+    try {
+      await firebaseAuth.signOut();
+      print('Sign out successful');
+    } catch (e) {
+      print('Sign out error: $e');
+      throw FirebaseAuthException(
+        code: 'sign-out-failed',
+        message: 'Błąd wylogowania: ${e.toString()}',
+      );
+    }
   }
 
   Future<void> resetPassword({required String email}) async {
@@ -61,7 +84,16 @@ class AuthService {
         message: 'Email nie może być pusty.',
       );
     }
-    await firebaseAuth.sendPasswordResetEmail(email: email);
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+      print('Password reset email sent');
+    } catch (e) {
+      print('Reset password error: $e');
+      throw FirebaseAuthException(
+        code: 'reset-password-failed',
+        message: 'Błąd resetowania hasła: ${e.toString()}',
+      );
+    }
   }
 
   Future<void> updateUsername({required String username}) async {
@@ -71,7 +103,16 @@ class AuthService {
         message: 'Brak zalogowanego użytkownika.',
       );
     }
-    await currentUser!.updateDisplayName(username);
+    try {
+      await currentUser!.updateDisplayName(username);
+      print('Username updated successfully');
+    } catch (e) {
+      print('Update username error: $e');
+      throw FirebaseAuthException(
+        code: 'update-username-failed',
+        message: 'Błąd aktualizacji nazwy użytkownika: ${e.toString()}',
+      );
+    }
   }
 
   Future<void> deleteAccount({
@@ -90,13 +131,22 @@ class AuthService {
         message: 'Email i hasło nie mogą być puste.',
       );
     }
-    AuthCredential credential = EmailAuthProvider.credential(
-      email: email,
-      password: password,
-    );
-    await currentUser!.reauthenticateWithCredential(credential);
-    await currentUser!.delete();
-    await firebaseAuth.signOut();
+    try {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: email,
+        password: password,
+      );
+      await currentUser!.reauthenticateWithCredential(credential);
+      await currentUser!.delete();
+      await firebaseAuth.signOut();
+      print('Account deleted successfully');
+    } catch (e) {
+      print('Delete account error: $e');
+      throw FirebaseAuthException(
+        code: 'delete-account-failed',
+        message: 'Błąd usuwania konta: ${e.toString()}',
+      );
+    }
   }
 
   Future<void> resetPasswordFromCurrentPassword({
@@ -122,11 +172,20 @@ class AuthService {
         message: 'Nowe hasło musi mieć co najmniej 6 znaków.',
       );
     }
-    AuthCredential credential = EmailAuthProvider.credential(
-      email: email,
-      password: currentPassword,
-    );
-    await currentUser!.reauthenticateWithCredential(credential);
-    await currentUser!.updatePassword(newPassword);
+    try {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: email,
+        password: currentPassword,
+      );
+      await currentUser!.reauthenticateWithCredential(credential);
+      await currentUser!.updatePassword(newPassword);
+      print('Password updated successfully');
+    } catch (e) {
+      print('Reset password from current password error: $e');
+      throw FirebaseAuthException(
+        code: 'reset-password-failed',
+        message: 'Błąd resetowania hasła: ${e.toString()}',
+      );
+    }
   }
 }
