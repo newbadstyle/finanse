@@ -1,5 +1,6 @@
 import 'package:finanse/app/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'add_expense_page.dart';
 import 'reminder_page.dart';
 import 'shopping_page.dart';
@@ -20,6 +21,14 @@ class Expense {
   });
 }
 
+class Salary {
+  final String company;
+  final double amount;
+  final String date;
+
+  Salary({required this.company, required this.amount, required this.date});
+}
+
 class BalancePage extends StatefulWidget {
   const BalancePage({super.key});
 
@@ -30,10 +39,14 @@ class BalancePage extends StatefulWidget {
 class _BalancePageState extends State<BalancePage> {
   int _selectedIndex = 0;
   List<Expense> expenses = [];
+  List<Salary> salaries = [];
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
-  double get totalBalance =>
-      expenses.fold(0.0, (sum, expense) => sum + expense.amount);
+  double get totalBalance {
+    final totalExpenses = expenses.fold(0.0, (sum, e) => sum - e.amount);
+    final totalSalaries = salaries.fold(0.0, (sum, s) => sum + s.amount);
+    return totalExpenses + totalSalaries;
+  }
 
   Future<void> _signOut(BuildContext context) async {
     await authService.value.signOut();
@@ -49,17 +62,24 @@ class _BalancePageState extends State<BalancePage> {
     setState(() {
       _selectedIndex = index;
     });
-    _navigatorKey.currentState?.pushReplacement(
+
+    _navigatorKey.currentState?.push(
       MaterialPageRoute(builder: (context) => _getSelectedPage()),
     );
+  }
+
+  void _addSalary(Salary salary) {
+    setState(() {
+      salaries.add(salary);
+    });
   }
 
   Widget _getSelectedPage() {
     final content = {
       0: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '€${totalBalance.toStringAsFixed(2)}',
@@ -70,32 +90,49 @@ class _BalancePageState extends State<BalancePage> {
                 color: Color(0xFF2A6F5B),
               ),
             ),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Monthly Expenses', style: TextStyle(color: Colors.black)),
-              ],
-            ),
-
             const SizedBox(height: 20),
+            const Text('Historia:'),
+            const SizedBox(height: 10),
             Expanded(
-              child: ListView.builder(
-                itemCount: expenses.length,
-                itemBuilder: (context, index) {
-                  final expense = expenses[index];
-                  return ListTile(
-                    leading: const Icon(Icons.circle),
-                    title: Text(expense.category),
-                    trailing: Text('₹${expense.amount.toStringAsFixed(2)}'),
-                  );
-                },
+              child: ListView(
+                children: [
+                  ...salaries.map(
+                    (salary) => ListTile(
+                      leading: const Icon(
+                        Icons.arrow_downward,
+                        color: Colors.green,
+                      ),
+                      title: Text('Wypłata: ${salary.company}'),
+                      subtitle: Text(
+                        DateFormat.yMd().format(DateTime.parse(salary.date)),
+                      ),
+                      trailing: Text(
+                        '+€${salary.amount.toStringAsFixed(2)}',
+                        style: const TextStyle(color: Colors.green),
+                      ),
+                    ),
+                  ),
+                  ...expenses.map(
+                    (expense) => ListTile(
+                      leading: const Icon(
+                        Icons.arrow_upward,
+                        color: Colors.red,
+                      ),
+                      title: Text(expense.category),
+                      subtitle: Text(expense.date),
+                      trailing: Text(
+                        '-€${expense.amount.toStringAsFixed(2)}',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
-      1: const ReceiptPage(),
+      1: ReceiptPage(onAddSalary: _addSalary),
       2: AddExpensePage(
         onSave: (expense) {
           setState(() {
@@ -107,7 +144,7 @@ class _BalancePageState extends State<BalancePage> {
       4: const ShoppingPage(),
     };
 
-    return content[_selectedIndex] ?? content[0]!;
+    return content[_selectedIndex]!;
   }
 
   @override
@@ -126,7 +163,8 @@ class _BalancePageState extends State<BalancePage> {
             _selectedIndex == 0
                 ? AppBar(
                   automaticallyImplyLeading: false,
-                  title: const Text('Home'),
+                  centerTitle: true,
+                  title: const Text('Stan Konta'),
                   backgroundColor: const Color(0xFF2A6F5B),
                   actions: [
                     IconButton(

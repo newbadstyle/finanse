@@ -1,36 +1,49 @@
 import 'package:flutter/material.dart';
+import 'balance_page.dart';
 
 class ReceiptPage extends StatefulWidget {
-  const ReceiptPage({super.key});
+  final Function(Salary) onAddSalary;
+
+  const ReceiptPage({super.key, required this.onAddSalary});
 
   @override
-  _ReceiptPageState createState() => _ReceiptPageState();
+  State<ReceiptPage> createState() => _ReceiptPageState();
 }
 
 class _ReceiptPageState extends State<ReceiptPage> {
-  final _dateController = TextEditingController(text: '10/08/2023');
-  final _descriptionController = TextEditingController();
-  String? _selectedCategory = 'Bills & Utility';
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _companyController = TextEditingController();
 
-  final List<String> categories = [
-    'Shopping',
-    'Bills & Utility',
-    'Education',
-    'Food',
-  ];
+  void _submitSalary() {
+    final amount = double.tryParse(_amountController.text);
+    final company = _companyController.text.trim();
+    final date = DateTime.now().toIso8601String();
 
-  @override
-  void dispose() {
-    _dateController.dispose();
-    _descriptionController.dispose();
-    super.dispose();
+    if (amount != null && company.isNotEmpty) {
+      final salary = Salary(company: company, amount: amount, date: date);
+      widget.onAddSalary(salary);
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Wypłata zapisana')));
+
+      Future.delayed(const Duration(seconds: 1), () {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Uzupełnij poprawnie wszystkie pola')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Receipt'),
+        title: const Text("Dodaj wypłatę"),
         backgroundColor: const Color(0xFF2A6F5B),
       ),
       body: Padding(
@@ -38,94 +51,32 @@ class _ReceiptPageState extends State<ReceiptPage> {
         child: Column(
           children: [
             TextField(
-              controller: _dateController,
+              controller: _companyController,
               decoration: const InputDecoration(
-                labelText: 'Date',
+                labelText: 'Nazwa firmy',
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-              value: _selectedCategory,
-              items:
-                  categories.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
             TextField(
-              controller: _descriptionController,
+              controller: _amountController,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: const InputDecoration(
-                labelText: 'Description (optional)',
+                labelText: 'Kwota wypłaty',
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _descriptionController.clear();
-                        _selectedCategory = categories[0];
-                      });
-                    },
-                    child: const Text('Edit'),
-                  ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _submitSalary,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF2A6F5B),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                    ),
-                    onPressed: () {
-                      _dateController.clear();
-                      _descriptionController.clear();
-                      setState(() {
-                        _selectedCategory = null;
-                      });
-                    },
-                    child: const Text('Delete'),
-                  ),
-                ),
-              ],
+                child: const Text('Zapisz wypłatę'),
+              ),
             ),
           ],
         ),
