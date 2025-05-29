@@ -71,6 +71,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
       appBar: AppBar(
         title: const Text("Dodaj wypłatę"),
         automaticallyImplyLeading: false,
+        centerTitle: true,
         backgroundColor: const Color(0xFF2A6F5B),
         foregroundColor: Colors.white,
         elevation: 0,
