@@ -1,7 +1,7 @@
 import 'package:finanse/app/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'start_page.dart';
+import 'balance_page.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -67,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => StartPage()),
+          MaterialPageRoute(builder: (context) => const BalancePage()),
         );
       }
     } on FirebaseAuthException catch (e) {
