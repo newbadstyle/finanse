@@ -217,7 +217,10 @@ class _BalancePageState extends State<BalancePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Receipt'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.attach_money_outlined),
+            label: 'deposits',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),

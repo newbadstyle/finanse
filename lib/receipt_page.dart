@@ -70,6 +70,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dodaj wypłatę"),
+        automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF2A6F5B),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -95,17 +96,35 @@ class _ReceiptPageState extends State<ReceiptPage> {
               ),
             ),
             const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _submitSalary,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2A6F5B),
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size(300, 40),
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      textStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: _submitSalary,
+                    child: const Text('Zapisz wypłatę'),
+                  ),
                 ),
-                child: const Text('Zapisz wypłatę'),
               ),
             ),
           ],
