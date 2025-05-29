@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'balance_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class ReceiptPage extends StatefulWidget {
   final Function(Salary) onAddSalary;
@@ -14,24 +16,48 @@ class _ReceiptPageState extends State<ReceiptPage> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
 
-  void _submitSalary() {
+  void _submitSalary() async {
     final amount = double.tryParse(_amountController.text);
     final company = _companyController.text.trim();
     final date = DateTime.now().toIso8601String();
 
     if (amount != null && company.isNotEmpty) {
-      final salary = Salary(company: company, amount: amount, date: date);
-      widget.onAddSalary(salary);
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Wypłata zapisana')));
-
-      Future.delayed(const Duration(seconds: 1), () {
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Nie jesteś zalogowany')),
+          );
+          return;
         }
-      });
+
+        final ref = FirebaseDatabase.instance
+            .ref()
+            .child('payments')
+            .child(user.uid);
+        final newSalaryRef = ref.push();
+
+        await newSalaryRef.set({
+          'company': company,
+          'amount': amount,
+          'date': date,
+        });
+
+        // Ukryj klawiaturę
+        FocusScope.of(context).unfocus();
+
+        // Wyczyść pola
+        _companyController.clear();
+        _amountController.clear();
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Wypłata zapisana')));
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Błąd zapisu: $e')));
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Uzupełnij poprawnie wszystkie pola')),
@@ -45,6 +71,8 @@ class _ReceiptPageState extends State<ReceiptPage> {
       appBar: AppBar(
         title: const Text("Dodaj wypłatę"),
         backgroundColor: const Color(0xFF2A6F5B),
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -73,6 +101,8 @@ class _ReceiptPageState extends State<ReceiptPage> {
                 onPressed: _submitSalary,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF2A6F5B),
+                  foregroundColor: Colors.white,
+                  elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: const Text('Zapisz wypłatę'),
