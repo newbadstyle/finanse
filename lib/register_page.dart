@@ -1,4 +1,5 @@
 import 'package:finanse/app/auth_service.dart';
+import 'package:finanse/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'balance_page.dart';
@@ -67,7 +68,11 @@ class _RegisterPageState extends State<RegisterPage> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const BalancePage()),
+          MaterialPageRoute(
+            builder:
+                (context) =>
+                    BalancePage(themeProvider: ThemeProvider.of(context)),
+          ),
         );
       }
     } on FirebaseAuthException catch (e) {

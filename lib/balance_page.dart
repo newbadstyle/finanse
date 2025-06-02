@@ -6,9 +6,10 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'add_expense_page.dart';
 import 'reminder_page.dart';
-import 'shopping_page.dart';
 import 'receipt_page.dart';
 import 'welcome_page.dart';
+import 'settings_page.dart';
+import 'theme_provider.dart';
 
 class Expense {
   final String category;
@@ -33,7 +34,9 @@ class Salary {
 }
 
 class BalancePage extends StatefulWidget {
-  const BalancePage({super.key});
+  final ThemeProvider themeProvider;
+
+  const BalancePage({super.key, required this.themeProvider});
 
   @override
   _BalancePageState createState() => _BalancePageState();
@@ -208,7 +211,7 @@ class _BalancePageState extends State<BalancePage> {
       1: ReceiptPage(onAddSalary: (salary) {}),
       2: const AddExpensePage(),
       3: const ReminderPage(),
-      4: const ShoppingPage(),
+      4: SettingsPage(themeProvider: widget.themeProvider),
     };
 
     return content[_selectedIndex]!;
@@ -247,7 +250,10 @@ class _BalancePageState extends State<BalancePage> {
             icon: Icon(Icons.notifications),
             label: 'Reminder',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Stats'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF2A6F5B),
