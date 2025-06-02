@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'balance_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class AddExpensePage extends StatefulWidget {
-  final Function(Expense) onSave;
-
-  const AddExpensePage({super.key, required this.onSave});
+  const AddExpensePage({super.key});
 
   @override
   _AddExpensePageState createState() => _AddExpensePageState();
@@ -13,8 +12,8 @@ class AddExpensePage extends StatefulWidget {
 class _AddExpensePageState extends State<AddExpensePage> {
   final _dateController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _amountController = TextEditingController();
   String? _selectedCategory;
-  double _amount = 0.0;
 
   final List<String> categories = [
     'Shopping',
@@ -27,7 +26,65 @@ class _AddExpensePageState extends State<AddExpensePage> {
   void dispose() {
     _dateController.dispose();
     _descriptionController.dispose();
+    _amountController.dispose();
     super.dispose();
+  }
+
+  void _submitExpense() async {
+    final amount = double.tryParse(_amountController.text);
+    final date = _dateController.text.trim();
+    final description = _descriptionController.text.trim();
+    final category = _selectedCategory;
+
+    if (amount != null && category != null && date.isNotEmpty) {
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Nie jesteś zalogowany')),
+          );
+          return;
+        }
+
+        final ref = FirebaseDatabase.instance
+            .ref()
+            .child('expenses')
+            .child(user.uid);
+        final newExpenseRef = ref.push();
+
+        await newExpenseRef.set({
+          'category': category,
+          'amount': amount,
+          'date': date,
+          'description': description,
+        });
+
+        // Ukryj klawiaturę
+        FocusScope.of(context).unfocus();
+
+        // Wyczyść pola
+        setState(() {
+          _dateController.clear();
+          _descriptionController.clear();
+          _amountController.clear();
+          _selectedCategory = null;
+        });
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Wydatek zapisany')));
+
+        // Nie wywołujemy Navigator.pop(context), aby pozostać na stronie
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Błąd zapisu: $e')));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Uzupełnij poprawnie wszystkie pola')),
+      );
+    }
   }
 
   @override
@@ -35,7 +92,11 @@ class _AddExpensePageState extends State<AddExpensePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Expense'),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         backgroundColor: const Color(0xFF2A6F5B),
+        foregroundColor: Colors.white,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -44,7 +105,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
             TextField(
               controller: _dateController,
               decoration: const InputDecoration(
-                labelText: 'Date (e.g., 10/08/2023)',
+                labelText: 'Date',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -78,33 +139,16 @@ class _AddExpensePageState extends State<AddExpensePage> {
             ),
             const SizedBox(height: 10),
             TextField(
+              controller: _amountController,
               decoration: const InputDecoration(
                 labelText: 'Amount',
                 border: OutlineInputBorder(),
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                _amount = double.tryParse(value) ?? 0.0;
-              },
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.grey,
-                  child: const Center(child: Text('+')),
-                ),
-                Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.grey,
-                  child: const Center(child: Text('+')),
-                ),
-              ],
-            ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -124,47 +168,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
                         borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                  ),
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                    ),
-                    onPressed: () {
-                      if (_selectedCategory != null &&
-                          _dateController.text.isNotEmpty &&
-                          _amount > 0) {
-                        final expense = Expense(
-                          category: _selectedCategory!,
-                          amount: _amount,
-                          date: _dateController.text,
-                          description: _descriptionController.text,
-                        );
-                        widget.onSave(expense);
-                        Navigator.pop(context);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please fill all required fields'),
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: _submitExpense,
                     child: const Text('Save'),
                   ),
                 ),

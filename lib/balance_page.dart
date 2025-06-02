@@ -45,12 +45,14 @@ class _BalancePageState extends State<BalancePage> {
   List<Salary> salaries = [];
 
   late DatabaseReference paymentsRef;
+  late DatabaseReference expensesRef;
   Stream<DatabaseEvent>? paymentsStream;
+  Stream<DatabaseEvent>? expensesStream;
 
   double get totalBalance {
-    final totalExpenses = expenses.fold(0.0, (sum, e) => sum - e.amount);
+    final totalExpenses = expenses.fold(0.0, (sum, e) => sum + e.amount);
     final totalSalaries = salaries.fold(0.0, (sum, s) => sum + s.amount);
-    return totalExpenses + totalSalaries;
+    return totalSalaries - totalExpenses;
   }
 
   @override
@@ -63,8 +65,13 @@ class _BalancePageState extends State<BalancePage> {
           .ref()
           .child('payments')
           .child(user.uid);
+      expensesRef = FirebaseDatabase.instance
+          .ref()
+          .child('expenses')
+          .child(user.uid);
 
       paymentsStream = paymentsRef.onValue;
+      expensesStream = expensesRef.onValue;
 
       paymentsStream!.listen((DatabaseEvent event) {
         final data = event.snapshot.value as Map<dynamic, dynamic>?;
@@ -85,6 +92,34 @@ class _BalancePageState extends State<BalancePage> {
 
         setState(() {
           salaries = newSalaries;
+        });
+      });
+
+      expensesStream!.listen((DatabaseEvent event) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>?;
+
+        List<Expense> newExpenses = [];
+
+        if (data != null) {
+          data.forEach((key, value) {
+            final category = value['category'] as String? ?? '';
+            final amount = value['amount'] as num? ?? 0;
+            final date = value['date'] as String? ?? '';
+            final description = value['description'] as String? ?? '';
+
+            newExpenses.add(
+              Expense(
+                category: category,
+                amount: amount.toDouble(),
+                date: date,
+                description: description,
+              ),
+            );
+          });
+        }
+
+        setState(() {
+          expenses = newExpenses;
         });
       });
     }
@@ -108,11 +143,6 @@ class _BalancePageState extends State<BalancePage> {
     setState(() {
       _selectedIndex = index;
     });
-
-    // Jeśli chcesz nawigować w navigatorze - inaczej możesz usunąć ten fragment
-    //_navigatorKey.currentState?.push(
-    //  MaterialPageRoute(builder: (context) => _getSelectedPage()),
-    //);
   }
 
   Widget _getSelectedPage() {
@@ -160,7 +190,9 @@ class _BalancePageState extends State<BalancePage> {
                         color: Colors.red,
                       ),
                       title: Text(expense.category),
-                      subtitle: Text(expense.date),
+                      subtitle: Text(
+                        '${expense.date}${expense.description.isNotEmpty ? ' - ${expense.description}' : ''}',
+                      ),
                       trailing: Text(
                         '-€${expense.amount.toStringAsFixed(2)}',
                         style: const TextStyle(color: Colors.red),
@@ -173,19 +205,8 @@ class _BalancePageState extends State<BalancePage> {
           ],
         ),
       ),
-      1: ReceiptPage(
-        onAddSalary: (salary) {
-          // Możesz usunąć tę funkcję lub zostawić pustą,
-          // bo teraz dane ładują się z Firebase na żywo
-        },
-      ),
-      2: AddExpensePage(
-        onSave: (expense) {
-          setState(() {
-            expenses.add(expense);
-          });
-        },
-      ),
+      1: ReceiptPage(onAddSalary: (salary) {}),
+      2: const AddExpensePage(),
       3: const ReminderPage(),
       4: const ShoppingPage(),
     };
@@ -219,7 +240,7 @@ class _BalancePageState extends State<BalancePage> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.attach_money_outlined),
-            label: 'deposits',
+            label: 'Deposits',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
           BottomNavigationBarItem(
