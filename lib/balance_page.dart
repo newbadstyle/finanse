@@ -1,4 +1,3 @@
-import 'package:finanse/app/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +7,6 @@ import 'reminder_page.dart';
 import 'receipt_page.dart';
 import 'settings_page.dart';
 import 'theme_provider.dart';
-import 'welcome_page.dart';
 
 class Expense {
   final String category;
@@ -125,20 +123,6 @@ class _BalancePageState extends State<BalancePage> {
     }
   }
 
-  Future<void> _signOut(BuildContext context) async {
-    await authService.value.signOut();
-    setState(() {
-      salaries.clear();
-      expenses.clear();
-    });
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const WelcomePage()),
-      );
-    }
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -224,12 +208,7 @@ class _BalancePageState extends State<BalancePage> {
                 centerTitle: true,
                 title: const Text('Stan Konta'),
                 elevation: 0,
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.logout),
-                    onPressed: () => _signOut(context),
-                  ),
-                ],
+                actions: [],
               )
               : null,
       body: _getSelectedPage(),
