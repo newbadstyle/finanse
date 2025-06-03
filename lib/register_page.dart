@@ -1,9 +1,10 @@
 import 'package:finanse/app/auth_service.dart';
-import 'package:finanse/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'balance_page.dart';
 import 'login_page.dart';
+import 'theme_provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -66,12 +67,14 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       if (mounted) {
+        final themeProvider = Provider.of<ThemeProvider>(
+          context,
+          listen: false,
+        );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder:
-                (context) =>
-                    BalancePage(themeProvider: ThemeProvider.of(context)),
+            builder: (context) => BalancePage(themeProvider: themeProvider),
           ),
         );
       }
@@ -115,13 +118,13 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 200),
-                const Text(
+                Text(
                   'Rejestracja',
                   style: TextStyle(
                     fontFamily: 'JosefinSans',
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF2A6F5B),
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -129,8 +132,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFE0F2F1), Color(0xFFB2DFDB)],
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(
+                            context,
+                          ).colorScheme.secondary.withOpacity(0.3),
+                          Theme.of(
+                            context,
+                          ).colorScheme.secondary.withOpacity(0.5),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -146,11 +156,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Email',
-                        prefixIcon: Icon(Icons.email, color: Color(0xFF2A6F5B)),
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(12),
+                        contentPadding: const EdgeInsets.all(12),
                       ),
                     ),
                   ),
@@ -160,8 +173,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFE0F2F1), Color(0xFFB2DFDB)],
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(
+                            context,
+                          ).colorScheme.secondary.withOpacity(0.3),
+                          Theme.of(
+                            context,
+                          ).colorScheme.secondary.withOpacity(0.5),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -177,11 +197,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Hasło',
-                        prefixIcon: Icon(Icons.lock, color: Color(0xFF2A6F5B)),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(12),
+                        contentPadding: const EdgeInsets.all(12),
                       ),
                     ),
                   ),
@@ -191,8 +214,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFE0F2F1), Color(0xFFB2DFDB)],
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(
+                            context,
+                          ).colorScheme.secondary.withOpacity(0.3),
+                          Theme.of(
+                            context,
+                          ).colorScheme.secondary.withOpacity(0.5),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -208,14 +238,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       controller: _confirmPasswordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Potwierdź hasło',
                         prefixIcon: Icon(
                           Icons.lock_outline,
-                          color: Color(0xFF2A6F5B),
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(12),
+                        contentPadding: const EdgeInsets.all(12),
                       ),
                     ),
                   ),
@@ -225,8 +255,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).colorScheme.secondary,
+                          Theme.of(context).colorScheme.primary,
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -236,7 +269,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       style: FilledButton.styleFrom(
                         minimumSize: const Size(double.infinity, 40),
                         backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.white,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -262,10 +296,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     );
                   },
-                  child: const Text(
+                  child: Text(
                     'Masz już konto? Zaloguj się',
                     style: TextStyle(
-                      color: Color(0xFF2A6F5B),
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 16,
                       decoration: TextDecoration.underline,
                     ),

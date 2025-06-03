@@ -1,6 +1,8 @@
 import 'package:finanse/app/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'theme_provider.dart';
 import 'welcome_page.dart';
 
 void main() async {
@@ -15,15 +17,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Ninja Finance',
-      theme: ThemeData(
-        primaryColor: const Color(0xFF2A6F5B),
-        fontFamily: 'JosefinSans',
-        iconTheme: const IconThemeData(color: Color(0xFF2A6F5B)),
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'Ninja Finance',
+            theme: themeProvider.themeData,
+            home: const WelcomePage(),
+            debugShowCheckedModeBanner: false,
+          );
+        },
       ),
-      home: const WelcomePage(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }

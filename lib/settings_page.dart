@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:finanse/app/auth_service.dart';
+import 'package:provider/provider.dart';
 import 'theme_provider.dart';
 import 'welcome_page.dart';
 
 class SettingsPage extends StatefulWidget {
-  final ThemeProvider themeProvider;
-
-  const SettingsPage({super.key, required this.themeProvider});
+  const SettingsPage({super.key});
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -20,7 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => WelcomePage()),
+          MaterialPageRoute(builder: (context) => const WelcomePage()),
         );
       }
     } catch (e) {
@@ -32,6 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
@@ -39,8 +39,6 @@ class _SettingsPageState extends State<SettingsPage> {
         title: const Text('Ustawienia'),
         automaticallyImplyLeading: false,
         centerTitle: true,
-        backgroundColor: const Color(0xFF2A6F5B),
-        foregroundColor: Colors.white,
         elevation: 0,
       ),
       body: Padding(
@@ -48,17 +46,20 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Konto',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF2A6F5B),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 10),
             ListTile(
-              leading: const Icon(Icons.person, color: Color(0xFF2A6F5B)),
+              leading: Icon(
+                Icons.person,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               title: Text(
                 user != null ? user.email ?? 'Brak emaila' : 'Nie zalogowano',
                 style: const TextStyle(fontSize: 16),
@@ -71,25 +72,26 @@ class _SettingsPageState extends State<SettingsPage> {
               endIndent: 16,
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Wygląd',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF2A6F5B),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 10),
             ListTile(
-              leading: const Icon(Icons.brightness_6, color: Color(0xFF2A6F5B)),
+              leading: Icon(
+                Icons.brightness_6,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               title: const Text('Motyw'),
               trailing: Switch(
-                value: widget.themeProvider.isDarkMode,
+                value: themeProvider.isDarkMode,
                 onChanged: (value) {
-                  widget.themeProvider.toggleTheme();
-                  setState(() {});
+                  themeProvider.toggleTheme();
                 },
-                activeColor: const Color(0xFF2A6F5B),
               ),
             ),
             const Divider(
@@ -101,16 +103,19 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 20),
             Center(
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
+                    colors: [
+                      Theme.of(context).colorScheme.secondary,
+                      Theme.of(context).colorScheme.primary,
+                    ],
                   ),
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
                 ),
                 child: FilledButton(
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.transparent,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),

@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import 'add_expense_page.dart';
 import 'reminder_page.dart';
 import 'receipt_page.dart';
-import 'welcome_page.dart';
 import 'settings_page.dart';
 import 'theme_provider.dart';
+import 'welcome_page.dart';
 
 class Expense {
   final String category;
@@ -34,9 +33,7 @@ class Salary {
 }
 
 class BalancePage extends StatefulWidget {
-  final ThemeProvider themeProvider;
-
-  const BalancePage({super.key, required this.themeProvider});
+  const BalancePage({super.key, required ThemeProvider themeProvider});
 
   @override
   _BalancePageState createState() => _BalancePageState();
@@ -157,11 +154,11 @@ class _BalancePageState extends State<BalancePage> {
           children: [
             Text(
               '€${totalBalance.toStringAsFixed(2)}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'JosefinSans',
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF2A6F5B),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(height: 20),
@@ -211,7 +208,7 @@ class _BalancePageState extends State<BalancePage> {
       1: ReceiptPage(onAddSalary: (salary) {}),
       2: const AddExpensePage(),
       3: const ReminderPage(),
-      4: SettingsPage(themeProvider: widget.themeProvider),
+      4: const SettingsPage(),
     };
 
     return content[_selectedIndex]!;
@@ -226,8 +223,6 @@ class _BalancePageState extends State<BalancePage> {
                 automaticallyImplyLeading: false,
                 centerTitle: true,
                 title: const Text('Stan Konta'),
-                backgroundColor: const Color(0xFF2A6F5B),
-                foregroundColor: Colors.white,
                 elevation: 0,
                 actions: [
                   IconButton(
@@ -256,8 +251,10 @@ class _BalancePageState extends State<BalancePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color(0xFF2A6F5B),
-        unselectedItemColor: const Color(0xFF2A6F5B).withOpacity(0.6),
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(
+          context,
+        ).colorScheme.primary.withOpacity(0.6),
         onTap: _onItemTapped,
       ),
     );
