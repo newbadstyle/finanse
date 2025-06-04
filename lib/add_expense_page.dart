@@ -41,7 +41,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
         final user = FirebaseAuth.instance.currentUser;
         if (user == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Nie jesteś zalogowany')),
+            const SnackBar(content: Text('Please log in to continue')),
           );
           return;
         }
@@ -72,18 +72,18 @@ class _AddExpensePageState extends State<AddExpensePage> {
 
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Wydatek zapisany')));
+        ).showSnackBar(const SnackBar(content: Text('Expense saved')));
 
         // Nie wywołujemy Navigator.pop(context), aby pozostać na stronie
       } catch (e) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Błąd zapisu: $e')));
+        ).showSnackBar(SnackBar(content: Text('Saving failed: $e')));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Uzupełnij poprawnie wszystkie pola')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Complete all fields')));
     }
   }
 

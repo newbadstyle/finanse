@@ -26,7 +26,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
         final user = FirebaseAuth.instance.currentUser;
         if (user == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Nie jesteś zalogowany')),
+            const SnackBar(content: Text('Please log in to continue')),
           );
           return;
         }
@@ -52,16 +52,16 @@ class _ReceiptPageState extends State<ReceiptPage> {
 
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Wypłata zapisana')));
+        ).showSnackBar(const SnackBar(content: Text('Payment saved')));
       } catch (e) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Błąd zapisu: $e')));
+        ).showSnackBar(SnackBar(content: Text('Saving failed: $e')));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Uzupełnij poprawnie wszystkie pola')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Complete all fields')));
     }
   }
 
@@ -69,7 +69,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dodaj wypłatę"),
+        title: const Text("Add payout"),
         automaticallyImplyLeading: false,
         centerTitle: true,
         backgroundColor: const Color(0xFF2A6F5B),
@@ -83,7 +83,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
             TextField(
               controller: _companyController,
               decoration: const InputDecoration(
-                labelText: 'Nazwa firmy',
+                labelText: 'Company name',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -92,7 +92,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
               controller: _amountController,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               decoration: const InputDecoration(
-                labelText: 'Kwota wypłaty',
+                labelText: 'Payout amount',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -123,7 +123,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                       ),
                     ),
                     onPressed: _submitSalary,
-                    child: const Text('Zapisz wypłatę'),
+                    child: const Text(' Save Payout'),
                   ),
                 ),
               ),

@@ -29,10 +29,10 @@ class WelcomePage extends StatelessWidget {
                 height: 450,
               ),
               const Text(
-                'Witaj w Ninja!',
+                'Welcome to Ninja!',
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               ),
-              const Text('Twój osobisty przewodnik po finansach'),
+              const Text('Your personal finance guide'),
               const SizedBox(height: 15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -62,7 +62,7 @@ class WelcomePage extends StatelessWidget {
                           ),
                         );
                       },
-                      child: const Text('Logowanie'),
+                      child: const Text('Log in'),
                     ),
                   ),
                 ),
@@ -96,7 +96,7 @@ class WelcomePage extends StatelessWidget {
                           ),
                         );
                       },
-                      child: const Text('Rejestracja'),
+                      child: const Text('Sign up'),
                     ),
                   ),
                 ),

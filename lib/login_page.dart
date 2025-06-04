@@ -33,16 +33,16 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Wypełnij wszystkie pola!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Complete all fields!')));
         return;
       }
 
       if (_passwordController.text.length < 6) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Hasło musi mieć co najmniej 6 znaków!'),
+            content: Text('Password must have at least 6 characters!'),
           ),
         );
         return;
@@ -65,19 +65,19 @@ class _LoginPageState extends State<LoginPage> {
       String message;
       switch (e.code) {
         case 'user-not-found':
-          message = 'Nie znaleziono użytkownika z tym adresem email.';
+          message = 'We couldn’t find a user with that email address.';
           break;
         case 'wrong-password':
-          message = 'Nieprawidłowe hasło.';
+          message = 'Invalid password.';
           break;
         case 'invalid-email':
-          message = 'Nieprawidłowy adres email.';
+          message = 'Invalid email address.';
           break;
         case 'empty-fields':
-          message = 'Email i hasło nie mogą być puste.';
+          message = 'Please enter both email and password.';
           break;
         default:
-          message = 'Wystąpił błąd: ${e.message}';
+          message = 'Something went wrong: ${e.message}';
       }
       if (mounted) {
         ScaffoldMessenger.of(
@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Proszę wpisać email, aby zresetować hasło.'),
+          content: Text('Please enter your email to reset your password.'),
         ),
       );
       return;
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Wysłano email z linkiem do resetowania hasła.'),
+            content: Text('An email with a password reset link has been sent.'),
           ),
         );
       }
@@ -117,16 +117,16 @@ class _LoginPageState extends State<LoginPage> {
       String message;
       switch (e.code) {
         case 'invalid-email':
-          message = 'Nieprawidłowy adres email.';
+          message = 'Invalid email address.';
           break;
         case 'user-not-found':
-          message = 'Nie znaleziono użytkownika z tym adresem email.';
+          message = 'We couldn’t find a user with that email address.';
           break;
         case 'empty-email':
-          message = 'Email nie może być pusty.';
+          message = 'Email cannot be empty.';
           break;
         default:
-          message = 'Wystąpił błąd: ${e.message}';
+          message = 'Something went wrong: ${e.message}';
       }
       if (mounted) {
         ScaffoldMessenger.of(
@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 const SizedBox(height: 200),
                 const Text(
-                  'Logowanie',
+                  'Logging',
                   style: TextStyle(
                     fontFamily: 'JosefinSans',
                     fontSize: 40,
@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFFE0F2F1), Color(0xFFB2DFDB)],
+                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -193,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFFE0F2F1), Color(0xFFB2DFDB)],
+                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -210,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
-                        labelText: 'Hasło',
+                        labelText: 'Password',
                         prefixIcon: Icon(Icons.lock, color: Color(0xFF2A6F5B)),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(12),
@@ -226,11 +226,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextButton(
                       onPressed: () => _resetPassword(context),
                       child: const Text(
-                        'Zapomniałeś hasła?',
+                        'Forgot your password?',
                         style: TextStyle(
                           color: Color(0xFF2A6F5B),
                           fontSize: 14,
-                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
@@ -264,7 +263,7 @@ class _LoginPageState extends State<LoginPage> {
                               ? const CircularProgressIndicator(
                                 color: Colors.white,
                               )
-                              : const Text('Zaloguj się'),
+                              : const Text('Log in'),
                     ),
                   ),
                 ),
@@ -279,12 +278,8 @@ class _LoginPageState extends State<LoginPage> {
                     );
                   },
                   child: const Text(
-                    'Nie masz konta? Zarejestruj się',
-                    style: TextStyle(
-                      color: Color(0xFF2A6F5B),
-                      fontSize: 16,
-                      decoration: TextDecoration.underline,
-                    ),
+                    'Dont have an account? Sign up',
+                    style: TextStyle(color: Color(0xFF2A6F5B), fontSize: 16),
                   ),
                 ),
                 const SizedBox(height: 80),

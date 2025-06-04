@@ -146,7 +146,7 @@ class _BalancePageState extends State<BalancePage> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text('Historia:'),
+            const Text('Payment:'),
             const SizedBox(height: 10),
             Expanded(
               child: ListView(
@@ -157,7 +157,7 @@ class _BalancePageState extends State<BalancePage> {
                         Icons.arrow_downward,
                         color: Colors.green,
                       ),
-                      title: Text('Wypłata: ${salary.company}'),
+                      title: Text('Salary: ${salary.company}'),
                       subtitle: Text(
                         DateFormat.yMd().format(DateTime.parse(salary.date)),
                       ),
@@ -206,7 +206,7 @@ class _BalancePageState extends State<BalancePage> {
               ? AppBar(
                 automaticallyImplyLeading: false,
                 centerTitle: true,
-                title: const Text('Stan Konta'),
+                title: const Text('Account balance'),
                 elevation: 0,
                 actions: [],
               )

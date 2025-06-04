@@ -25,7 +25,7 @@ class _SettingsPageState extends State<SettingsPage> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Błąd wylogowania: $e')));
+      ).showSnackBar(SnackBar(content: Text('Logout error: $e')));
     }
   }
 
@@ -36,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ustawienia'),
+        title: const Text('Settings'),
         automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 0,
@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Konto',
+              'Account',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -61,7 +61,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 color: Theme.of(context).colorScheme.primary,
               ),
               title: Text(
-                user != null ? user.email ?? 'Brak emaila' : 'Nie zalogowano',
+                user != null
+                    ? user.email ?? 'No email provided'
+                    : 'You are not logged in',
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -73,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Wygląd',
+              'Appearance',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -86,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Icons.brightness_6,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              title: const Text('Motyw'),
+              title: const Text('Theme'),
               trailing: Switch(
                 value: themeProvider.isDarkMode,
                 onChanged: (value) {
@@ -125,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   onPressed: () => _signOut(context),
-                  child: const Text('Wyloguj się'),
+                  child: const Text('Log out'),
                 ),
               ),
             ),

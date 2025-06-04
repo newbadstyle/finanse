@@ -106,7 +106,7 @@ class _ReminderPageState extends State<ReminderPage> {
         final user = FirebaseAuth.instance.currentUser;
         if (user == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Nie jesteś zalogowany')),
+            const SnackBar(content: Text('You are not logged in')),
           );
           return;
         }
@@ -135,18 +135,18 @@ class _ReminderPageState extends State<ReminderPage> {
           _selectedCategory = null;
         });
 
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Przypomnienie zapisane')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Reminder has been saved')),
+        );
       } catch (e) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Błąd zapisu: $e')));
+        ).showSnackBar(SnackBar(content: Text('Saving failed: $e')));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Uzupełnij poprawnie wszystkie pola')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Complete all fields')));
     }
   }
 

@@ -16,7 +16,7 @@ class AuthService {
     if (email.isEmpty || password.isEmpty) {
       throw FirebaseAuthException(
         code: 'empty-fields',
-        message: 'Email i hasło nie mogą być puste.',
+        message: 'Email and Password cannot be empty.',
       );
     }
     try {
@@ -36,13 +36,13 @@ class AuthService {
     if (email.isEmpty || password.isEmpty) {
       throw FirebaseAuthException(
         code: 'empty-fields',
-        message: 'Email i hasło nie mogą być puste.',
+        message: 'Email and Password cannot be empty.',
       );
     }
     if (password.length < 6) {
       throw FirebaseAuthException(
         code: 'weak-password',
-        message: 'Hasło musi mieć co najmniej 6 znaków.',
+        message: 'Password must have at least 6 characters.',
       );
     }
     try {
@@ -59,7 +59,7 @@ class AuthService {
     if (email.isEmpty) {
       throw FirebaseAuthException(
         code: 'empty-email',
-        message: 'Email nie może być pusty.',
+        message: 'Email cannot be empty.',
       );
     }
     try {

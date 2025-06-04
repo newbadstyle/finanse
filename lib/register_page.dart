@@ -39,23 +39,23 @@ class _RegisterPageState extends State<RegisterPage> {
       if (_emailController.text.isEmpty ||
           _passwordController.text.isEmpty ||
           _confirmPasswordController.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Wypełnij wszystkie pola!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Complete all fields!')));
         return;
       }
 
       if (_passwordController.text != _confirmPasswordController.text) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Hasła nie są zgodne!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Passwords do not match!')),
+        );
         return;
       }
 
       if (_passwordController.text.length < 6) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Hasło musi mieć co najmniej 6 znaków!'),
+            content: Text('Password must have at least 6 characters!'),
           ),
         );
         return;
@@ -82,16 +82,16 @@ class _RegisterPageState extends State<RegisterPage> {
       String message;
       switch (e.code) {
         case 'email-already-in-use':
-          message = 'Ten adres email jest już używany.';
+          message = 'This email address is already in use.';
           break;
         case 'invalid-email':
-          message = 'Nieprawidłowy adres email.';
+          message = 'Invalid email address.';
           break;
         case 'weak-password':
-          message = 'Hasło jest za słabe.';
+          message = 'Password is too weak.';
           break;
         default:
-          message = 'Wystąpił błąd: ${e.message}';
+          message = 'Something went wrong: ${e.message}';
       }
       if (mounted) {
         ScaffoldMessenger.of(
@@ -119,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 const SizedBox(height: 200),
                 Text(
-                  'Rejestracja',
+                  'Registration',
                   style: TextStyle(
                     fontFamily: 'JosefinSans',
                     fontSize: 40,
@@ -132,15 +132,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(
-                            context,
-                          ).colorScheme.secondary.withOpacity(0.3),
-                          Theme.of(
-                            context,
-                          ).colorScheme.secondary.withOpacity(0.5),
-                        ],
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -173,15 +166,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(
-                            context,
-                          ).colorScheme.secondary.withOpacity(0.3),
-                          Theme.of(
-                            context,
-                          ).colorScheme.secondary.withOpacity(0.5),
-                        ],
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -198,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: 'Hasło',
+                        labelText: 'Password',
                         prefixIcon: Icon(
                           Icons.lock,
                           color: Theme.of(context).colorScheme.primary,
@@ -214,15 +200,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(
-                            context,
-                          ).colorScheme.secondary.withOpacity(0.3),
-                          Theme.of(
-                            context,
-                          ).colorScheme.secondary.withOpacity(0.5),
-                        ],
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFB0F1D4), Color(0xFF2A6F5B)],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -239,7 +218,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _confirmPasswordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: 'Potwierdź hasło',
+                        labelText: 'Confirm password',
                         prefixIcon: Icon(
                           Icons.lock_outline,
                           color: Theme.of(context).colorScheme.primary,
@@ -282,7 +261,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ? const CircularProgressIndicator(
                                 color: Colors.white,
                               )
-                              : const Text('Zarejestruj się'),
+                              : const Text('Sign up'),
                     ),
                   ),
                 ),
@@ -297,7 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     );
                   },
                   child: Text(
-                    'Masz już konto? Zaloguj się',
+                    'Do you already have an account? Log in',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 16,
