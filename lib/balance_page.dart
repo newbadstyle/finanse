@@ -161,60 +161,67 @@ class _BalancePageState extends State<BalancePage> {
 
   Widget _getSelectedPage(BuildContext context) {
     final content = {
-      0: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '€${totalBalance.toStringAsFixed(2)}',
-              style: TextStyle(
-                fontFamily: 'JosefinSans',
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) =>
-                            SummaryPage(expenses: expenses, salaries: salaries),
-                  ),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+      0: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '€${totalBalance.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontFamily: 'JosefinSans',
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Summary of the current month',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+              ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => SummaryPage(
+                            expenses: expenses,
+                            salaries: salaries,
+                          ),
                     ),
-                  ],
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Summary of the current month',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text('Payment:'),
-            const SizedBox(height: 10),
-            Expanded(
-              child: ListView.separated(
+              const SizedBox(height: 20),
+              const Text('Payment:'),
+              const SizedBox(height: 10),
+              ListView.separated(
+                shrinkWrap: true, // Umożliwia osadzenie w SingleChildScrollView
+                physics:
+                    const NeverScrollableScrollPhysics(), // Wyłącza przewijanie listy
                 itemCount: salaries.length + expenses.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
@@ -301,8 +308,8 @@ class _BalancePageState extends State<BalancePage> {
                   }
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       1: ReceiptPage(onAddSalary: (salary) {}),
