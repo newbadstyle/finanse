@@ -1,5 +1,5 @@
+import 'package:finanse/summary_page.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'add_expense_page.dart';
@@ -9,7 +9,7 @@ import 'settings_page.dart';
 import 'theme_provider.dart';
 
 class Expense {
-  final String key; // Added to store the Firebase key for deletion
+  final String key;
   final String category;
   final double amount;
   final String date;
@@ -25,7 +25,7 @@ class Expense {
 }
 
 class Salary {
-  final String key; // Added to store the Firebase key for deletion
+  final String key;
   final String company;
   final double amount;
   final String date;
@@ -49,8 +49,7 @@ class _BalancePageState extends State<BalancePage> {
   int _selectedIndex = 0;
   List<Expense> expenses = [];
   List<Salary> salaries = [];
-  String?
-  _selectedItemKey; // Tracks which item is selected to show the delete button
+  String? _selectedItemKey;
 
   late DatabaseReference paymentsRef;
   late DatabaseReference expensesRef;
@@ -142,27 +141,25 @@ class _BalancePageState extends State<BalancePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _selectedItemKey = null; // Reset selected item when changing pages
+      _selectedItemKey = null;
     });
   }
 
-  // Function to delete a salary from Firebase
   Future<void> _deleteSalary(String key) async {
     await paymentsRef.child(key).remove();
     setState(() {
-      _selectedItemKey = null; // Hide delete button after deletion
+      _selectedItemKey = null;
     });
   }
 
-  // Function to delete an expense from Firebase
   Future<void> _deleteExpense(String key) async {
     await expensesRef.child(key).remove();
     setState(() {
-      _selectedItemKey = null; // Hide delete button after deletion
+      _selectedItemKey = null;
     });
   }
 
-  Widget _getSelectedPage() {
+  Widget _getSelectedPage(BuildContext context) {
     final content = {
       0: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -176,6 +173,41 @@ class _BalancePageState extends State<BalancePage> {
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            SummaryPage(expenses: expenses, salaries: salaries),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Summary of the current month',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -198,11 +230,7 @@ class _BalancePageState extends State<BalancePage> {
                             color: Colors.green,
                           ),
                           title: Text('Salary: ${salary.company}'),
-                          subtitle: Text(
-                            DateFormat.yMd().format(
-                              DateTime.parse(salary.date),
-                            ),
-                          ),
+                          subtitle: Text(salary.date), // Display as DD.MM.YYYY
                           trailing: Text(
                             '+€${salary.amount.toStringAsFixed(2)}',
                             style: const TextStyle(color: Colors.green),
@@ -242,7 +270,7 @@ class _BalancePageState extends State<BalancePage> {
                           ),
                           title: Text(expense.category),
                           subtitle: Text(
-                            '${expense.date}${expense.description.isNotEmpty ? ' - ${expense.description}' : ''}',
+                            '${expense.date}${expense.description.isNotEmpty ? ' - ${expense.description}' : ''}', // Display as DD.MM.YYYY
                           ),
                           trailing: Text(
                             '-€${expense.amount.toStringAsFixed(2)}',
@@ -299,7 +327,7 @@ class _BalancePageState extends State<BalancePage> {
                 actions: [],
               )
               : null,
-      body: _getSelectedPage(),
+      body: _getSelectedPage(context),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
