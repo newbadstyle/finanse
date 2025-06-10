@@ -34,8 +34,9 @@ class SummaryPage extends StatelessWidget {
         final month = DateFormat(
           'MMM',
         ).format(parsedDate).toLowerCase().substring(0, 3);
-        if (month == currentMonthAbbr)
+        if (month == currentMonthAbbr) {
           totals[month] = (totals[month]! + salary.amount);
+        }
       } catch (e) {
         print('Error parsing salary date $salary.date: $e');
       }
@@ -48,8 +49,9 @@ class SummaryPage extends StatelessWidget {
         final month = DateFormat(
           'MMM',
         ).format(parsedDate).toLowerCase().substring(0, 3);
-        if (month == currentMonthAbbr)
+        if (month == currentMonthAbbr) {
           totals[month] = (totals[month]! - expense.amount);
+        }
       } catch (e) {
         print('Error parsing expense date $expense.date: $e');
       }
